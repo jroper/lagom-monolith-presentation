@@ -10,6 +10,5 @@ public class StockWatchingModule extends AbstractModule implements ServiceGuiceS
     @Override
     protected void configure() {
         bindServices(serviceBinding(StockWatchingService.class, StockWatchingServiceImpl.class));
-        bindClient(MailService.class);
     }
 }

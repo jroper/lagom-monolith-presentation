@@ -17,12 +17,10 @@ import java.util.concurrent.CompletionStage;
 public class StockWatchingServiceImpl implements StockWatchingService {
 
     private final PersistentEntityRegistry entities;
-    private final MailService mailService;
 
     @Inject
-    public StockWatchingServiceImpl(PersistentEntityRegistry persistentEntityRegistry, MailService mailService) {
+    public StockWatchingServiceImpl(PersistentEntityRegistry persistentEntityRegistry) {
         this.entities = persistentEntityRegistry;
-        this.mailService = mailService;
 
         entities.register(WatchedStockEntity.class);
     }

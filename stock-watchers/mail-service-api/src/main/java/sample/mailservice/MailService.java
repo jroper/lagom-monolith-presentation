@@ -10,7 +10,4 @@ import static com.lightbend.lagom.javadsl.api.Service.*;
 
 public interface MailService extends Service {
 
-    ServiceCall<String, MailEvent, NotUsed> sendMail();
-
-
 }
