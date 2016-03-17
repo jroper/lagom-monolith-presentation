@@ -10,5 +10,5 @@ public class LagomStockWatchingService implements StockWatchingService {
 
     private RestTemplate restTemplate = new RestTemplate();
 
-    
+
 }
