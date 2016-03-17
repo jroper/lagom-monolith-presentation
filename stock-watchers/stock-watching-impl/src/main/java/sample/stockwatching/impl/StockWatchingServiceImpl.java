@@ -27,7 +27,6 @@ public class StockWatchingServiceImpl implements StockWatchingService {
         entities.register(WatchedStockEntity.class);
     }
 
-    @Override
     public ServiceCall<StockWatch, NotUsed, NotUsed> watchStock() {
         return (stockWatch, req) ->
                 entity(stockWatch.stockId())
@@ -35,7 +34,6 @@ public class StockWatchingServiceImpl implements StockWatchingService {
                         .thenApply(done -> NotUsed.getInstance());
     }
 
-    @Override
     public ServiceCall<StockWatch, NotUsed, NotUsed> unwatchStock() {
         return (stockWatch, req) ->
                 entity(stockWatch.stockId())
@@ -43,24 +41,21 @@ public class StockWatchingServiceImpl implements StockWatchingService {
                         .thenApply(done -> NotUsed.getInstance());
     }
 
-    @Override
     public ServiceCall<StockWatch, NotUsed, Boolean> isWatchingStock() {
         return (stockWatch, req) ->
                 entity(stockWatch.stockId())
                         .ask(new IsWatching(stockWatch.userId()));
     }
 
-    @Override
     public ServiceCall<String, NotUsed, NotUsed> stockAvailabilityChanged() {
         return (stockId, req) -> {
             CompletionStage<PSet<String>> result = entity(stockId)
                     .ask(GetWatchers.INSTANCE);
             return result.thenApply(watchers -> {
-                        watchers.forEach(watcher ->
-                                // Send email here
-                                mailService.sendMail()
-                                        .invoke(watcher, new MailEvent.StockAvailabilityChanged(stockId))
-                        );
+                        watchers.forEach(watcher -> {
+                            // send email here
+
+                        });
                         return NotUsed.getInstance();
                     });
         };

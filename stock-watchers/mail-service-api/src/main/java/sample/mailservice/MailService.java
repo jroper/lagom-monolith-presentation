@@ -12,10 +12,5 @@ public interface MailService extends Service {
 
     ServiceCall<String, MailEvent, NotUsed> sendMail();
 
-    @Override
-    default Descriptor descriptor() {
-        return named("mail").with(
-                restCall(Method.POST, "/mail/:userId", sendMail())
-        );
-    }
+
 }
