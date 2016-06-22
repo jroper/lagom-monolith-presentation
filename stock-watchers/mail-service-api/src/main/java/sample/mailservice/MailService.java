@@ -10,12 +10,12 @@ import static com.lightbend.lagom.javadsl.api.Service.*;
 
 public interface MailService extends Service {
 
-    ServiceCall<String, MailEvent, NotUsed> sendMail();
+    ServiceCall<MailEvent, NotUsed> sendMail(String userId);
 
     @Override
     default Descriptor descriptor() {
         return named("mail").with(
-                restCall(Method.POST, "/mail/:userId", sendMail())
+                restCall(Method.POST, "/mail/:userId", this::sendMail)
         );
     }
 }

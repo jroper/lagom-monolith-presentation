@@ -7,7 +7,6 @@ import com.lightbend.lagom.javadsl.persistence.PersistentEntityRegistry;
 import org.pcollections.PSet;
 import sample.mailservice.MailEvent;
 import sample.mailservice.MailService;
-import sample.stockwatching.StockWatch;
 import sample.stockwatching.StockWatchingService;
 import sample.stockwatching.impl.WatchedStockCommand.*;
 
@@ -28,38 +27,38 @@ public class StockWatchingServiceImpl implements StockWatchingService {
     }
 
     @Override
-    public ServiceCall<StockWatch, NotUsed, NotUsed> watchStock() {
-        return (stockWatch, req) ->
-                entity(stockWatch.stockId())
-                        .ask(new AddWatcher(stockWatch.userId()))
+    public ServiceCall<NotUsed, NotUsed> watchStock(String stockId, String userId) {
+        return (req) ->
+                entity(stockId)
+                        .ask(new AddWatcher(userId))
                         .thenApply(done -> NotUsed.getInstance());
     }
 
     @Override
-    public ServiceCall<StockWatch, NotUsed, NotUsed> unwatchStock() {
-        return (stockWatch, req) ->
-                entity(stockWatch.stockId())
-                        .ask(new RemoveWatcher(stockWatch.userId()))
+    public ServiceCall<NotUsed, NotUsed> unwatchStock(String stockId, String userId) {
+        return (req) ->
+                entity(stockId)
+                        .ask(new RemoveWatcher(userId))
                         .thenApply(done -> NotUsed.getInstance());
     }
 
     @Override
-    public ServiceCall<StockWatch, NotUsed, Boolean> isWatchingStock() {
-        return (stockWatch, req) ->
-                entity(stockWatch.stockId())
-                        .ask(new IsWatching(stockWatch.userId()));
+    public ServiceCall<NotUsed, Boolean> isWatchingStock(String stockId, String userId) {
+        return (req) ->
+                entity(stockId)
+                        .ask(new IsWatching(userId));
     }
 
     @Override
-    public ServiceCall<String, NotUsed, NotUsed> stockAvailabilityChanged() {
-        return (stockId, req) -> {
+    public ServiceCall<NotUsed, NotUsed> stockAvailabilityChanged(String stockId) {
+        return (req) -> {
             CompletionStage<PSet<String>> result = entity(stockId)
                     .ask(GetWatchers.INSTANCE);
             return result.thenApply(watchers -> {
                         watchers.forEach(watcher ->
                                 // Send email here
-                                mailService.sendMail()
-                                        .invoke(watcher, new MailEvent.StockAvailabilityChanged(stockId))
+                                mailService.sendMail(watcher)
+                                        .invoke(new MailEvent.StockAvailabilityChanged(stockId))
                         );
                         return NotUsed.getInstance();
                     });
