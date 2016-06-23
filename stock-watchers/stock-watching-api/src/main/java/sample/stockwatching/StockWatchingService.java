@@ -17,7 +17,7 @@ public interface StockWatchingService extends Service {
 
     @Override
     default Descriptor descriptor() {
-        return named("stockWatching").with(
+        return named("stockWatching").withCalls(
                 restCall(Method.PUT, "/stock/:stockId/watch/:userId", this::watchStock),
                 restCall(Method.DELETE, "/stock/:stockId/watch/:userId", this::unwatchStock),
                 restCall(Method.GET, "/stock/:stockId/watch/:userId", this::isWatchingStock),

@@ -14,7 +14,7 @@ public interface MailService extends Service {
 
     @Override
     default Descriptor descriptor() {
-        return named("mail").with(
+        return named("mail").withCalls(
                 restCall(Method.POST, "/mail/:userId", this::sendMail)
         );
     }
